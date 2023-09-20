@@ -5,6 +5,7 @@ export const Wrapper = styled.div`
   align-items: center;
   flex-direction: column;
   gap: 20px;
+  overflow-y: scroll;
 `;
 
 export const AvatarBox  = styled.div`

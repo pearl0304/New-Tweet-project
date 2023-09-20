@@ -1,8 +1,10 @@
 import {Wrapper, Title, Form, Input, Switcher, Error} from "../styled/auth.styled.ts";
 import React, {useState} from "react";
 import {createUserWithEmailAndPassword, updateProfile} from "firebase/auth";
-import {firebaseAuth} from "../firebase.ts";
+import {firebaseAuth, firebaseDB} from "../firebase.ts";
 import {useNavigate, Link} from "react-router-dom";
+import {addDoc, collection} from "firebase/firestore";
+import moment from "moment";
 
 
 export default function CreateAccount() {
@@ -36,9 +38,16 @@ export default function CreateAccount() {
       /** SET THE NAME OF THE  USER **/
       await updateProfile(credentials.user, {displayName: formData.name});
 
-      /** REDIRECT TO THE HOME PAGE **/
-      navigate("/");
-
+      /** CREATE USER DOCUMENT**/
+      await addDoc(collection(firebaseDB, "users"), {
+        uid : credentials.user.uid,
+        displayName : credentials.user.displayName,
+        email : credentials.user.email,
+        dateCreated : moment().utc().format()
+      }).then(()=> {
+        /** REDIRECT TO THE HOME PAGE **/
+        navigate("/");
+      });
     } catch (error) {
       // TODO : SET ERROR **/
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment

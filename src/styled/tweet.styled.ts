@@ -12,9 +12,33 @@ export const Wrapper = styled.div`
 export const Box = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: start;
+  align-items: center;
   position: relative;
+  margin-bottom: 5px;
 `;
+
+export const UserInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+
+`;
+
+
+export const Profile = styled.div`
+  width: 50px;
+  height: 50px;
+  background: #eee;
+  border-radius: 50%;
+
+  img {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+`;
+
 
 export const MoreBox = styled.div`
   background: #eee;
@@ -27,7 +51,8 @@ export const MoreBox = styled.div`
 export const Column = styled.div`
   &:last-child {
     place-self: end;
-  } ;
+  }
+;
 `;
 
 export const PhotoBox = styled.div`
@@ -45,7 +70,7 @@ export const Photo = styled.img`
 
 export const UserName = styled.span`
   font-weight: 600;
-  font-size: 16px;
+  font-size: 14px;
 `;
 
 export const Payload = styled.p`

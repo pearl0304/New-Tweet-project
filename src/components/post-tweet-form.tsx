@@ -36,7 +36,6 @@ export default function PostTweetForm() {
       const doc = await addDoc(collection(firebaseDB, "tweets"), {
         tweet,
         dateCreated: moment.utc().format(),
-        displayName: user.displayName || "User",
         uid: user.uid
       });
 

@@ -1,13 +1,26 @@
-import {Column, Payload, Photo, UserName, Wrapper, Box, MoreBox, PhotoBox} from "../styled/tweet.styled.ts";
+import {
+  Payload,
+  Photo,
+  UserName,
+  Wrapper,
+  Box,
+  MoreBox,
+  PhotoBox,
+  Profile,
+  UserInfo
+} from "../styled/tweet.styled.ts";
 import {ITweet} from "../interfaces.ts";
 import {useEffect, useRef, useState} from "react";
 import MoreMenu from "./more-menu.tsx";
+import {firebaseAuth} from "../firebase.ts";
 
 
 export default function Tweet({displayName, photoURL, tweet, uid, id}: ITweet) {
   const [open, setOpen] = useState(false);
   const tweetRef = useRef<HTMLDivElement | null>(null);
   const moreButtonRef = useRef<HTMLDivElement | null>(null);
+  const user = firebaseAuth.currentUser;
+  const profile = user?.photoURL;
 
   const toggleMore = () => {
     setOpen(true)
@@ -25,14 +38,15 @@ export default function Tweet({displayName, photoURL, tweet, uid, id}: ITweet) {
     }
   }, []);
 
-
   return (
     <Wrapper>
       <Box ref={tweetRef}>
-        <Column>
+        <UserInfo>
+          <Profile>
+            <img src={profile ? profile : ''}/>
+          </Profile>
           <UserName>{displayName}</UserName>
-          <Payload>{tweet}</Payload>
-        </Column>
+        </UserInfo>
         <MoreBox onClick={toggleMore} ref={moreButtonRef}>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
             <path fillRule="evenodd"
@@ -42,6 +56,7 @@ export default function Tweet({displayName, photoURL, tweet, uid, id}: ITweet) {
         </MoreBox>
         {open && (<MoreMenu uid={uid} id={id} photoURL={photoURL}/>)}
       </Box>
+      <Payload>{tweet}</Payload>
       <PhotoBox>{photoURL ? <Photo src={photoURL}></Photo> : null}</PhotoBox>
     </Wrapper>
   )
