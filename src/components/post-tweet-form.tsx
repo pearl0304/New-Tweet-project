@@ -17,12 +17,12 @@ export default function PostTweetForm() {
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {files} = e.target;
 
-    if (files && files[0].size > 1000000) {
+    if (files && files[0].size >  2 * 1024 * 1024) {
       alert("Please attach an image of 1MB or less")
       return false
     }
 
-    if (files && files.length === 1 && files[0].size <= 1000000) {
+    if (files && files.length === 1 && files[0].size < 2 * 1024 * 1024) {
       setFile(files[0])
     }
   }

@@ -26,7 +26,6 @@ export default function TweetList() {
             id: doc.id
           };
         });
-        // @ts-ignore
         setTweets(tweets)
       });
     }
