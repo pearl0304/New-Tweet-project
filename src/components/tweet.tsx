@@ -9,18 +9,28 @@ import {
   Profile,
   UserInfo
 } from "../styled/tweet.styled.ts";
-import {ITweet} from "../interfaces.ts";
 import {useEffect, useRef, useState} from "react";
 import MoreMenu from "./more-menu.tsx";
-import {firebaseAuth} from "../firebase.ts";
+import {user} from "../common/common.ts";
 
-
-export default function Tweet({displayName, photoURL, tweet, uid, id}: ITweet) {
-  const [open, setOpen] = useState(false);
+export default function Tweet({photoURL, tweet, uid, id}: {
+  photoURL: string,
+  tweet: string,
+  uid: string,
+  id: string
+}) {
+  const [open, setOpen] = useState<boolean>(false);
+  const [displayName, setDisplayName] = useState<string>("");
+  const [profile, setProfile] = useState<string>("");
   const tweetRef = useRef<HTMLDivElement | null>(null);
   const moreButtonRef = useRef<HTMLDivElement | null>(null);
-  const user = firebaseAuth.currentUser;
-  const profile = user?.photoURL;
+
+
+  user(uid).then((data) => {
+    setDisplayName(data.displayName);
+    setProfile(data.photoURL)
+  })
+
 
   const toggleMore = () => {
     setOpen(true)
@@ -43,7 +53,7 @@ export default function Tweet({displayName, photoURL, tweet, uid, id}: ITweet) {
       <Box ref={tweetRef}>
         <UserInfo>
           <Profile>
-            <img src={profile ? profile : ''}/>
+            <img src={profile ? profile : '/public/images/user.png'}/>
           </Profile>
           <UserName>{displayName}</UserName>
         </UserInfo>

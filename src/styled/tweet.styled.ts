@@ -31,11 +31,11 @@ export const Profile = styled.div`
   height: 50px;
   background: #eee;
   border-radius: 50%;
+  overflow: hidden;
 
   img {
     width: 100%;
     height: 100%;
-    overflow: hidden;
   }
 `;
 

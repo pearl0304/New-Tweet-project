@@ -40,11 +40,11 @@ export default function CreateAccount() {
 
       /** CREATE USER DOCUMENT**/
       await addDoc(collection(firebaseDB, "users"), {
-        uid : credentials.user.uid,
-        displayName : credentials.user.displayName,
-        email : credentials.user.email,
-        dateCreated : moment().utc().format()
-      }).then(()=> {
+        uid: credentials.user.uid,
+        displayName: credentials.user.displayName,
+        email: credentials.user.email,
+        dateCreated: moment().utc().format()
+      }).then(() => {
         /** REDIRECT TO THE HOME PAGE **/
         navigate("/");
       });

@@ -4,22 +4,29 @@ export const Wrapper = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  gap: 20px;
-  overflow-y: scroll;
+  gap: 40px;
+`;
+export const Box = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 30px;
 `;
 
-export const AvatarBox  = styled.div`
-  width: 100%;
+export const AvatarBox = styled.div`
   display: flex;
-  align-items: end;
+  align-items: center;
   justify-content: center;
+  padding: 10px;
+  height: 100px;
+  position: relative;
 `;
 
 
 export const AvatarUpload = styled.label`
-  width: 80px;
+  width: 100px;
   overflow: hidden;
-  height: 80px;
+  height: 100px;
   border-radius: 50%;
   background-color: #eee;
   cursor: pointer;
@@ -39,8 +46,11 @@ export const PlusButton = styled.div`
   width: 25px;
   height: 25px;
   text-align: center;
-  margin-left: -20px;
-  
+  position: absolute;
+  right: 10px;
+  bottom: 5px;
+
+
   svg {
     margin: 2px;
     width: 20px;
@@ -50,20 +60,23 @@ export const PlusButton = styled.div`
 `;
 
 export const AvatarImg = styled.img`
-  width: 100%
+  width: 100%;
+  height: 100%;
 `;
 
 export const AvatarInput = styled.input`
   display: none
 `;
 
+
 export const Name = styled.span`
   font-size: 18px;
+  font-weight: bolder;
 `;
 
 export const Tweets = styled.div`
   display: flex;
   width: 100%;
   flex-direction: column;
-  gap: 10px
+  gap: 10px;
 `;
