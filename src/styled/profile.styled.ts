@@ -79,4 +79,6 @@ export const Tweets = styled.div`
   width: 100%;
   flex-direction: column;
   gap: 10px;
+  height: 500px;
+  overflow-y: scroll;
 `;
