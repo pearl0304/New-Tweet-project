@@ -6,7 +6,7 @@ import {
   AvatarUpload,
   Name,
   Tweets,
-  PlusButton, Top, Box, Info
+  PlusButton, Box, InfoBox, InfoBoxWrap, Edit
 } from "../styled/profile.styled.ts";
 import {firebaseAuth, firebaseStorage, firebaseDB} from "../firebase.ts";
 import React, {useEffect, useState} from "react";
@@ -98,7 +98,10 @@ export default function Profile() {
           </PlusButton>
           <AvatarInput onChange={onAvatarChange} id="avatar" type="file" accept="image/*"></AvatarInput>
         </AvatarBox>
-        <Name>{user?.displayName ?? "User"}</Name>
+        <InfoBoxWrap>
+            <Name>{user?.displayName ?? "User"}</Name>
+            <Edit>Edit Profile</Edit>
+        </InfoBoxWrap>
       </Box>
       <Tweets>{tweets.map((tweet) => (<Tweet key={tweet.id} {...tweet}/>))}</Tweets>
     </Wrapper>
