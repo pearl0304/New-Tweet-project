@@ -1,20 +1,20 @@
 import {collection, getDocs, query, where} from "firebase/firestore";
 import {firebaseDB} from "../firebase.ts";
 
-const getUser = async (uid: string) => {
+const getUser = async (uid: string | null) => {
   const userCollection = collection(firebaseDB, "users");
   const userQuery = query(userCollection, where("uid", "==", uid));
   const querySnapshot = await getDocs(userQuery);
   return querySnapshot.docs.map((doc) => {
     const data = doc.data();
     return {
-      displayName: data.displayName,
-      photoURL: data.photoURL
+      ...data,
+      id : doc.id
     }
   })
 }
 
-export const owner = async (uid: string) => {
+export const owner = async (uid: string | null)  => {
   const data = await getUser(uid);
   return data[0];
 }

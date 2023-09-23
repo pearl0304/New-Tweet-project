@@ -34,7 +34,7 @@ export const AvatarUpload = styled.label`
   overflow: hidden;
   height: 100px;
   border-radius: 50%;
-  background-color: #eee;
+  border: 1px solid #eee;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -98,7 +98,7 @@ export const Edit = styled.div`
   background: #f5f5f5;
   text-align: center;
   border-radius: 5px;
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
 `;
 

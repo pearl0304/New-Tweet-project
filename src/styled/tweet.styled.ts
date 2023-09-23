@@ -29,9 +29,9 @@ export const UserInfo = styled.div`
 export const Profile = styled.div`
   width: 50px;
   height: 50px;
-  background: #eee;
   border-radius: 50%;
   overflow: hidden;
+  border : 1px solid #eee;
 
   img {
     width: 100%;
