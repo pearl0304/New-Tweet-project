@@ -59,13 +59,25 @@ export const PhotoBox = styled.div`
   margin-top: 10px;
   display: flex;
   justify-content: center;
-  width: 300px;
+  width: 100%px;
 `;
 
 export const Photo = styled.img`
   width: 95%;
   height: 95%;
   border-radius: 15px;
+`;
+
+export const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 2px;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+
 `;
 
 export const UserName = styled.span`

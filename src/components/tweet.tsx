@@ -7,18 +7,18 @@ import {
   MoreBox,
   PhotoBox,
   Profile,
-  UserInfo
+  UserInfo, GridContainer
 } from "../styled/tweet.styled.ts";
 import {useEffect, useRef, useState} from "react";
 import MoreMenu from "./more-menu.tsx";
 import {owner} from "../common/common.ts";
 import {Link} from "react-router-dom";
 
-export default function Tweet({photoURL, tweet, uid, id}: {
-  photoURL: string,
+export default function Tweet({tweet, uid, id, images}: {
   tweet: string,
   uid: string,
-  id: string
+  id: string,
+  images: string[]
 }) {
   const [open, setOpen] = useState<boolean>(false);
   const [displayName, setDisplayName] = useState<string>("");
@@ -54,7 +54,8 @@ export default function Tweet({photoURL, tweet, uid, id}: {
       <Box ref={tweetRef}>
         <UserInfo>
           <Profile>
-            <Link to={{pathname: '/profile', search:`?uid=${uid}`}}><img src={profile ? profile : '/public/images/user.png'}/></Link>
+            <Link to={{pathname: '/profile', search: `?uid=${uid}`}}><img
+              src={profile ? profile : '/public/images/user.png'}/></Link>
           </Profile>
           <UserName>{displayName}</UserName>
         </UserInfo>
@@ -65,10 +66,24 @@ export default function Tweet({photoURL, tweet, uid, id}: {
                   clipRule="evenodd"/>
           </svg>
         </MoreBox>
-        {open && (<MoreMenu uid={uid} id={id} photoURL={photoURL}/>)}
+        {open && (<MoreMenu uid={uid} id={id} photoURL={images}/>)}
       </Box>
       <Payload>{tweet}</Payload>
-      <PhotoBox>{photoURL ? <Photo src={photoURL}></Photo> : null}</PhotoBox>
+      <PhotoBox>
+        {images ? (
+          images.length === 1 ? (
+            // 이미지가 한 장인 경우
+            <Photo src={images[0]}></Photo>
+          ) : (
+            // 이미지가 여러 장인 경우
+            <GridContainer>
+              {images.map((image, index) => (
+                <Photo key={index} src={image}></Photo>
+              ))}
+            </GridContainer>
+          )
+        ) : null}
+      </PhotoBox>
     </Wrapper>
   )
 }

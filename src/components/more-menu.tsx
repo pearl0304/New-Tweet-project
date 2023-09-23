@@ -4,7 +4,7 @@ import {firebaseAuth, firebaseDB, firebaseStorage} from "../firebase.ts";
 import {deleteObject, ref} from "firebase/storage";
 
 
-export default function MoreMenu({uid, photoURL, id}: { uid: string, photoURL: string, id: string }) {
+export default function MoreMenu({uid, photoURL, id}: { uid: string, photoURL: string[], id: string }) {
 
   const user = firebaseAuth.currentUser;
   const onDelete = async () => {
