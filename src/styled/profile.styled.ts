@@ -23,6 +23,10 @@ export const AvatarBox = styled.div`
   height: 100px;
   position: relative;
   margin-bottom: 20px;
+  
+  &.center {
+    width: 100%;
+  }
 `;
 
 export const AvatarUpload = styled.label`

@@ -3,6 +3,7 @@ import {Wrapper, Menu, MenuItem} from "../styled/layout.styled.ts";
 import {firebaseAuth} from "../firebase.ts";
 
 export default function Layout() {
+  const user = firebaseAuth.currentUser;
   const navigator = useNavigate()
   const onLogout = async () => {
     const ok = confirm('Are you sure you want to log out?')
@@ -26,7 +27,7 @@ export default function Layout() {
             </MenuItem>
           </Link>
 
-          <Link to="/profile">
+          <Link to={{pathname: '/profile', search: `?uid=${user?.uid}`}}>
             <MenuItem>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                 <path fillRule="evenodd"

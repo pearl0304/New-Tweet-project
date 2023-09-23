@@ -14,7 +14,7 @@ const getUser = async (uid: string) => {
   })
 }
 
-export const user = async (uid: string) => {
+export const owner = async (uid: string) => {
   const data = await getUser(uid);
   return data[0];
 }

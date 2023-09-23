@@ -11,7 +11,8 @@ import {
 } from "../styled/tweet.styled.ts";
 import {useEffect, useRef, useState} from "react";
 import MoreMenu from "./more-menu.tsx";
-import {user} from "../common/common.ts";
+import {owner} from "../common/common.ts";
+import {Link} from "react-router-dom";
 
 export default function Tweet({photoURL, tweet, uid, id}: {
   photoURL: string,
@@ -26,7 +27,7 @@ export default function Tweet({photoURL, tweet, uid, id}: {
   const moreButtonRef = useRef<HTMLDivElement | null>(null);
 
 
-  user(uid).then((data) => {
+  owner(uid).then((data) => {
     setDisplayName(data.displayName);
     setProfile(data.photoURL)
   })
@@ -53,7 +54,7 @@ export default function Tweet({photoURL, tweet, uid, id}: {
       <Box ref={tweetRef}>
         <UserInfo>
           <Profile>
-            <img src={profile ? profile : '/public/images/user.png'}/>
+            <Link to={{pathname: '/profile', search:`?uid=${uid}`}}><img src={profile ? profile : '/public/images/user.png'}/></Link>
           </Profile>
           <UserName>{displayName}</UserName>
         </UserInfo>

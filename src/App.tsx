@@ -10,6 +10,7 @@ import {useEffect, useState} from "react";
 import Loading from "./components/loading.tsx";
 import {firebaseAuth} from "./firebase.ts";
 import ProtectedRoute from "./components/protected-route.ts";
+import EditProfile from "./routes/edit-profile.tsx";
 
 
 const Wrapper = styled.div`
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "profile",
         element: (<Profile/>)
+      },
+      {
+        path: "edit-profile",
+        element: (<EditProfile/>)
       }
     ]
   },
@@ -44,9 +49,7 @@ const router = createBrowserRouter([
 ])
 
 const GlobalStyles = createGlobalStyle`
-  ${reset}
-
-  ;
+  ${reset} ;
   * {
     box-sizing: border-box;
   }

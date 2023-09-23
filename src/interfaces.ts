@@ -3,6 +3,8 @@ export interface ITweet {
   uid: string,
   displayName: string,
   tweet: string,
-  photoURL: string,
-  dateCreated: string
+  photoURL?: string,
+  dateCreated: string,
+  bio? : string,
+  link? : string
 }
