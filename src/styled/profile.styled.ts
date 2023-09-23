@@ -11,6 +11,7 @@ export const Box = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
+  min-height: 200px;
   gap: 30px;
   border-bottom: 2px solid lightblue;
 `;
@@ -23,7 +24,7 @@ export const AvatarBox = styled.div`
   height: 100px;
   position: relative;
   margin-bottom: 20px;
-  
+
   &.center {
     width: 100%;
   }
@@ -76,15 +77,11 @@ export const AvatarInput = styled.input`
 
 export const InfoBoxWrap = styled.div`
   width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 20px;
-  
-`;
-export const InfoBox = styled.div`
-
+  margin-bottom: 10px;
 `;
 export const Name = styled.span`
   font-size: 16px;
@@ -109,3 +106,11 @@ export const Tweets = styled.div`
   flex-direction: column;
   gap: 10px;
 `;
+
+export const Bio = styled.span`
+  font-size: 12px;
+  height: 100%;
+`;
+
+export const UserLink = styled.span`
+  font-size: 12px`;

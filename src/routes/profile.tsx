@@ -6,7 +6,7 @@ import {
   AvatarUpload,
   Name,
   Tweets,
-  PlusButton, Box, InfoBoxWrap, Edit
+  PlusButton, Box, InfoBoxWrap, Edit, Bio, UserLink
 } from "../styled/profile.styled.ts";
 import {firebaseAuth, firebaseStorage, firebaseDB} from "../firebase.ts";
 import React, {useEffect, useState} from "react";
@@ -27,11 +27,15 @@ export default function Profile() {
   const queryParams = new URLSearchParams(location.search);
   const ownerUid = String(queryParams.get('uid'));
   const [avatar, setAvatar] = useState<string | null>('');
-  const [displayName, setDisplayName] = useState<string>('')
+  const [displayName, setDisplayName] = useState<string>('');
+  const [bio, setBio] = useState<string>('');
+  const [link, setLink] = useState<string>('');
 
   owner(ownerUid).then((data) => {
     setAvatar(data.photoURL);
-    setDisplayName(data.displayName)
+    setDisplayName(data.displayName);
+    setBio(data.bio);
+    setLink(data.link);
   })
 
   /** 유저가 로그아웃 했거나, 다른 화면에 있을 때 굳이 이벤트를 들을 필요가 없기때문에 마운트 됐을 때에만 Snapshot 하도록 처리**/
@@ -120,6 +124,8 @@ export default function Profile() {
         </AvatarBox>
         <InfoBoxWrap>
           <Name>{displayName}</Name>
+          <Bio>{bio}</Bio>
+          <UserLink>🔗 <Link to={link} target="_blank">{link}</Link></UserLink>
           {ownerUid === user?.uid ? (
             <Edit><Link to={{pathname: '/edit-profile', search: `?uid=${ownerUid}`}}>Edit Profile</Link></Edit>) : null}
         </InfoBoxWrap>
