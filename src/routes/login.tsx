@@ -58,6 +58,8 @@ export default function CreateAccount() {
 
         /** SET THE NAME OF THE  USER **/
         updateProfile(credential.user, {displayName: credential.displayName});
+
+        /** CREATE USER DOCUMENT**/
         owner(user.uid).then((data) => {
           if (data === undefined) {
             addDoc(collection(firebaseDB, "users"), {
@@ -74,7 +76,7 @@ export default function CreateAccount() {
       .catch((error) => {
         const errorCode: string = error.code;
         const errorMessage: string = error.message;
-        const credential = GoogleAuthProvider.credentialFromError(error);
+        GoogleAuthProvider.credentialFromError(error);
         setError(`${errorCode} : ${errorMessage}`);
       });
   }

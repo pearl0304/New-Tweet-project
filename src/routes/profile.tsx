@@ -125,7 +125,7 @@ export default function Profile() {
         <InfoBoxWrap>
           <Name>{displayName}</Name>
           <Bio>{bio}</Bio>
-          <UserLink>🔗 <Link to={link} target="_blank">{link}</Link></UserLink>
+          {link ? (  <UserLink>🔗 <Link to={link} target="_blank">{link}</Link></UserLink>) : null }
           {ownerUid === user?.uid ? (
             <Edit><Link to={{pathname: '/edit-profile', search: `?uid=${ownerUid}`}}>Edit Profile</Link></Edit>) : null}
         </InfoBoxWrap>

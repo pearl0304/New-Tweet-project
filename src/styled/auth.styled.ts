@@ -50,4 +50,3 @@ export const Switcher = styled.span`
   a {
     color: #1d9bf0;
   }`;
-

@@ -1,27 +1,29 @@
-# React + TypeScript + Vite
+# Carrot Chat
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 프로젝트 소개
+- 리액트와 파이어베이스를 사용하여 간단한 SNS (Tweet) 만들기
+- ref : 노마드 코더 트위터 클론 코딩
 
-Currently, two official plugins are available:
+## Stack
+<img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=white"/>
+<img src="https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&logo=Firebase&logoColor=white"/>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 주요 기능
+### 회원가입
+- Firebase의 `createUserWithEmailAndPassword` 을 사용하여 회원가입 기능 구현
+### 로그인
+- Firebase의  `signInWithEmailAndPassword` , `GoogleAuthProvider` 을 통해 로그인 기능 구현
 
-## Expanding the ESLint configuration
+### 프로필 수정
+- 로그인한 유저정보와 프로필 페이지의 유저가 동일할 경우에만 프로필 수정하도록
+- 프로필 이미지 업로드 
+- 프로필 페이지 접속 시 해당 유저가 작성한 글만 보이기
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### 피드
+- 로그인한 유저만 글 작성 가능
+- 이미지 여러장 업로드 
+- 실시간 피드 출력
+- 본인 글만 삭제 가능
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+---
+© 2023 Kylie
