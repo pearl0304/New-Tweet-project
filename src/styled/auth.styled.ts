@@ -28,11 +28,16 @@ export const Input = styled.input`
 
   &[type="submit"] {
     cursor: pointer;
+    margin-bottom: 10px;
 
     &:hover {
       opacity: 0.8;
     }
-  }`;
+  }
+  &[type="button"] {
+    cursor: pointer;
+  }
+`;
 
 export const Error = styled.span`
   margin-top: 15px;
@@ -45,3 +50,4 @@ export const Switcher = styled.span`
   a {
     color: #1d9bf0;
   }`;
+

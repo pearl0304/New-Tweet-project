@@ -1,8 +1,14 @@
 import React, {useState} from "react";
-import {signInWithEmailAndPassword} from "firebase/auth";
-import {firebaseAuth} from "../firebase.ts";
+import {GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, updateProfile} from "firebase/auth";
+import {firebaseAuth, firebaseDB} from "../firebase.ts";
 import {useNavigate, Link} from "react-router-dom";
-import {Wrapper,Title, Form, Input, Switcher , Error} from "../styled/auth.styled.ts";
+import {Wrapper, Title, Form, Input, Switcher, Error} from "../styled/auth.styled.ts";
+import firebase from "firebase/compat";
+import AuthCredential = firebase.auth.AuthCredential;
+import User = firebase.User;
+import {addDoc, collection} from "firebase/firestore";
+import moment from "moment/moment";
+import {owner} from "../common/common.ts";
 
 export default function CreateAccount() {
   const navigate = useNavigate();
@@ -41,6 +47,38 @@ export default function CreateAccount() {
     }
   }
 
+  const googlePopup = async () => {
+    const provider = new GoogleAuthProvider();
+    provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+    signInWithPopup(firebaseAuth, provider)
+      .then((result) => {
+        const credential: AuthCredential = GoogleAuthProvider.credentialFromResult(result);
+        const token: string = credential.accessToken;
+        const user: User = result.user;
+
+        /** SET THE NAME OF THE  USER **/
+        updateProfile(credential.user, {displayName: credential.displayName});
+        owner(user.uid).then((data) => {
+          if (data === undefined) {
+            addDoc(collection(firebaseDB, "users"), {
+              uid: user.uid,
+              displayName: user.displayName,
+              email: user.email,
+              dateCreated: moment().utc().format()
+            })
+          }
+        });
+
+        navigate("/");
+      })
+      .catch((error) => {
+        const errorCode: string = error.code;
+        const errorMessage: string = error.message;
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        setError(`${errorCode} : ${errorMessage}`);
+      });
+  }
+
   return <Wrapper>
     <Title>Log In 🥕</Title>
     <Form onSubmit={onSubmit}>
@@ -49,6 +87,7 @@ export default function CreateAccount() {
              required/>
       <Input type="submit" value="Login"/>
     </Form>
+    <Input type="button" value="Login with Google" onClick={googlePopup}/>
     {error !== "" ? <Error>{error}</Error> : null}
     <Switcher>
       Don't have an account? <Link to="/create-account">Create one &rarr;</Link>
