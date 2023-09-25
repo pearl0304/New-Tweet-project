@@ -1,6 +1,6 @@
 import {Form, TextArea, AttachFileButton, AttachFileInput, SubmitBtn} from "../styled/post.styled.ts";
 import React, {useState} from "react";
-import {addDoc, collection, updateDoc} from 'firebase/firestore'
+import {addDoc, collection, doc, updateDoc} from 'firebase/firestore'
 import {firebaseAuth, firebaseDB, firebaseStorage} from "../firebase.ts";
 import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
 import moment from "moment";
@@ -16,7 +16,7 @@ export default function PostTweetForm() {
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    if(files.length > 5) {
+    if (files.length > 5) {
       alert("You can only attach 4 photos at a time")
       return false
     }
@@ -33,8 +33,12 @@ export default function PostTweetForm() {
       const doc = await addDoc(collection(firebaseDB, "tweets"), {
         tweet,
         dateCreated: moment.utc().format(),
-        uid: user.uid
+        uid: user.uid,
       });
+      await updateDoc(doc, {
+        id: doc.id
+      })
+
 
       if (selectedFiles.length < 5) {
         const images = [];

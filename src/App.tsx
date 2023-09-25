@@ -11,6 +11,7 @@ import Loading from "./components/loading.tsx";
 import {firebaseAuth} from "./firebase.ts";
 import ProtectedRoute from "./components/protected-route.ts";
 import EditProfile from "./routes/edit-profile.tsx";
+import EditTweet from "./routes/edit-tweet.tsx";
 
 
 const Wrapper = styled.div`
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: "edit-profile",
         element: (<EditProfile/>)
+      },
+      {
+        path: "edit-tweet",
+        element: (<EditTweet/>)
       }
     ]
   },
