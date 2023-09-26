@@ -16,7 +16,7 @@ export default function PostTweetForm() {
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    if (files.length > 5) {
+    if (files.length > 4) {
       alert("You can only attach 4 photos at a time")
       return false
     }

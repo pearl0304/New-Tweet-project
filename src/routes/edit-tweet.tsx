@@ -1,12 +1,18 @@
-import {firebaseAuth, firebaseDB, firebaseStorage} from "../firebase.ts";
-import {useLocation} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import {addDoc, collection, updateDoc} from "firebase/firestore";
+import {useLocation, useNavigate} from "react-router-dom";
+import {
+  doc,
+  updateDoc,
+} from "firebase/firestore";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
+import moment from "moment/moment";
+import {firebaseAuth, firebaseDB, firebaseStorage} from "../firebase.ts";
 import {getTweet} from "../common/common.ts";
 import {AttachFileButton, AttachFileInput, Form, SubmitBtn, TextArea} from "../styled/post.styled.ts";
-import moment from "moment/moment";
-import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
-import {GridContainer, Photo, PhotoBox} from "../styled/tweet.styled.ts";
 
 export default function EditTweet() {
   /** USER VERIFICATION**/
@@ -14,20 +20,70 @@ export default function EditTweet() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get('id');
+  if (id === '' || !user) return;
+
+  const [error, setError] = useState<string>('');
   const [isLoading, setLoading] = useState(false);
   const [tweet, setTweet] = useState("");
-  const [images, setImages] = useState<string[]>([])
-  const [selectedFiles, setSelectedFiles] = useState<File[] | string[]>([]);
+  const [images, setImages] = useState<string[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const navigate = useNavigate();
+
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setTweet(e.target.value)
+    setTweet(e.target.value);
   }
 
-  const handleDeleteImage = async () => {
+  const handleRemoveImage = (indexToRemove: number) => {
+    const updatedImages = [...images];
+    updatedImages.splice(indexToRemove, 1);
+    setImages(updatedImages);
+  }
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      if (images.length + files.length > 4) {
+        setError('You can upload a maximum of 4 images')
+      } else {
+        setError('')
+        const newFiles = Array.from(files);
+        setSelectedFiles([...selectedFiles, ...newFiles])
+      }
+    }
+  }
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const uploadImageUrls: string[] = [];
+    for (const file of selectedFiles) {
+      const storageRef = ref(firebaseStorage, `tweets/${user.uid}/${id}/${file.name}`);
+      try {
+        await uploadBytes(storageRef, file);
+        const url = await getDownloadURL(storageRef);
+        uploadImageUrls.push(url);
+      } catch (e) {
+        console.warn('Error uploading image to Firebase Storage : ', error);
+      }
+    }
+
+    /** COMBINE EXISTING IMAGE AND NEWLY UPLOADED IMAGE **/
+    const finalImages = [...images, ...uploadImageUrls];
+
+    /** UPDATE FIREBASE **/
     try {
-      console.log("여기서부터 작업하면 됨")
+      await updateDoc(doc(firebaseDB, 'tweets', id), {
+        tweet: tweet,
+        images: finalImages,
+        dateUpdated: moment().utc().format()
+      });
+
+      setLoading(false);
+      navigate('/');
     } catch (e) {
-      console.warn(e)
+      console.warn(e);
+      setError('Failed to update the tweet')
     }
   }
 
@@ -39,31 +95,22 @@ export default function EditTweet() {
   }, []);
 
 
-  return <Form>
+  return <Form onSubmit={onSubmit}>
     <TextArea placeholder="What is happening" onChange={onChange} value={tweet} rows={5} maxLength={180} required/>
     <div>
-      {images ? (
-        images.length === 1 ? (
-          // 이미지가 한 장인 경우
-          <div>
-            <img src={images[0]}></img>
-            <button type="button" onClick={handleDeleteImage}>X</button>
-          </div>
-        ) : (
-          // 이미지가 여러 장인 경우
-          <div>
-            {images.map((image, index) => (
-              <div key={index}>
-                <img key={index} src={image}></img>
-                <button type="button" onClick={handleDeleteImage}>X</button>
-              </div>
-            ))}
-          </div>
-        )
+      {images.length > 0 ? (
+        <div>
+          {images.map((image, index) => (
+            <div key={index}>
+              <img src={image} alt={`Image ${index}`}/>
+              <button type="button" onClick={() => handleRemoveImage(index)}> X</button>
+            </div>
+          ))}
+        </div>
       ) : null}
     </div>
     <AttachFileButton htmlFor="file">Add photo</AttachFileButton>
-    <AttachFileInput type="file" id="file" accept="image/*" multiple/>
-    <SubmitBtn type="submit" value={isLoading ? "Posting..." : "Post Tweet"}/>
+    <AttachFileInput type="file" id="file" accept="image/*" multiple onChange={handleFileUpload}/>
+    <SubmitBtn type="submit" value={isLoading ? "Posting..." : "Edit Tweet"}/>
   </Form>
 }
