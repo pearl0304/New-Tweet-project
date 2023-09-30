@@ -1,8 +1,10 @@
 import {Column, Icon, Menu, MoreLi, MoreUl, PopupWrapper} from "../styled/moreMenu.styled.ts";
-import {deleteDoc, doc} from "firebase/firestore";
+import {addDoc, collection, deleteDoc, doc, updateDoc} from "firebase/firestore";
 import {firebaseAuth, firebaseDB, firebaseStorage} from "../firebase.ts";
 import {deleteObject, ref} from "firebase/storage";
 import {Link} from "react-router-dom";
+import {getBookmark } from "../common/common.ts";
+import moment from "moment";
 
 
 export default function MoreMenu({uid, photoURL, id}: { uid: string, photoURL: string[], id: string }) {
@@ -22,11 +24,41 @@ export default function MoreMenu({uid, photoURL, id}: { uid: string, photoURL: s
     }
   }
 
+  const handleBookMark = async () => {
+    try {
+      // CHECK BOOKMARK
+      const proc = await getBookmark(id, user?.uid);
+      // ADD BOOKMARK
+      if (proc[0] === undefined) {
+        const data = {
+          refId: id,
+          uid: user?.uid,
+          dateCreated: moment().utc().format(),
+          action: 'ADD'
+        }
+
+        const result = await addDoc(collection(firebaseDB, 'bookmarks'), {
+          ...data
+        })
+        await updateDoc(result, {
+          id: result.id
+        })
+        alert('Add bookmark')
+      } else {
+        // REMOVE BOOKMARK
+        await deleteDoc(doc(firebaseDB, "bookmarks", proc[0].id));
+        alert('Remove bookmark')
+      }
+    } catch (e) {
+      console.warn(e)
+    }
+  }
+
   return (
     <PopupWrapper>
       <MoreUl>
         <MoreLi>
-          <Column>
+          <Column onClick={handleBookMark}>
             <Icon>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
                    stroke="currentColor" className="w-6 h-6">
@@ -47,7 +79,7 @@ export default function MoreMenu({uid, photoURL, id}: { uid: string, photoURL: s
                         d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"/>
                 </svg>
               </Icon>
-              <Menu><Link to={{pathname : '/edit-tweet', search:`?id=${id}`}}>Edit</Link></Menu>
+              <Menu><Link to={{pathname: '/edit-tweet', search: `?id=${id}`}}>Edit</Link></Menu>
             </Column>
           </MoreLi>) : null
         }

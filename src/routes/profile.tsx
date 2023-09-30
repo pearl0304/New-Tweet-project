@@ -26,45 +26,69 @@ export default function Profile() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const ownerUid = String(queryParams.get('uid'));
+
   const [avatar, setAvatar] = useState<string | null>('');
   const [displayName, setDisplayName] = useState<string>('');
   const [bio, setBio] = useState<string>('');
   const [link, setLink] = useState<string>('');
 
-  owner(ownerUid).then((data) => {
-    setAvatar(data.photoURL);
-    setDisplayName(data.displayName);
-    setBio(data.bio);
-    setLink(data.link);
-  })
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const userData = await owner(ownerUid);
+        setAvatar(userData.photoURL);
+        setDisplayName(userData.displayName);
+        setBio(userData.bio);
+        setLink(userData.link);
+      } catch (e) {
+        console.error("Error fetching user data: ", e)
+      }
+    }
+
+    fetchUserData();
+  }, [ownerUid])
+
 
   /** 유저가 로그아웃 했거나, 다른 화면에 있을 때 굳이 이벤트를 들을 필요가 없기때문에 마운트 됐을 때에만 Snapshot 하도록 처리**/
   let unsubscribe: Unsubscribe | null = null;
 
   const [tweets, setTweets] = useState<ITweet[]>([]);
-  const getList = async () => {
-    const tweetQuery = query(
-      collection(firebaseDB, "tweets"),
-      where("uid", "==", ownerUid),
-      orderBy("dateCreated", "desc"),
-      limit(25)
-    );
-    unsubscribe = onSnapshot(tweetQuery, (snapshot) => {
-      const tweets = snapshot.docs.map((doc) => {
-        const data = doc.data();
-        return {
-          ...data,
-          id: doc.id
-        };
-      });
 
-      setTweets(tweets)
-    });
+  const getList = async () => {
+    try {
+      const tweetQuery = query(
+        collection(firebaseDB, "tweets"),
+        where("uid", "==", ownerUid),
+        orderBy("dateCreated", "desc"),
+        limit(25)
+      );
+      unsubscribe = onSnapshot(tweetQuery, (snapshot) => {
+        const tweets = snapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            ...data,
+            id: doc.id
+          };
+        });
+
+        setTweets(tweets)
+      });
+    } catch (e) {
+      console.error(e)
+    }
   };
 
+
+
   useEffect(() => {
-    getList()
-  }, [tweets]);
+      getList();
+    return () => {
+      // Clean up the event listener when the component unmounts
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    }
+  }, [ownerUid])
 
 
   const onAvatarChange = async (e: React.ChangeEvent<HTMLFormElement>) => {
@@ -125,9 +149,10 @@ export default function Profile() {
         <InfoBoxWrap>
           <Name>{displayName}</Name>
           <Bio>{bio}</Bio>
-          {link ? (  <UserLink>🔗 <Link to={link} target="_blank">{link}</Link></UserLink>) : null }
+          {link ? (<UserLink>🔗 <Link to={link} target="_blank">{link}</Link></UserLink>) : null}
           {ownerUid === user?.uid ? (
             <Edit><Link to={{pathname: '/edit-profile', search: `?uid=${ownerUid}`}}>Edit Profile</Link></Edit>) : null}
+          <Edit><Link to={{pathname: '/profile', search: `?uid=${ownerUid}&mode=bookmark`}}>Save</Link></Edit>
         </InfoBoxWrap>
       </Box>
       <Tweets>{tweets.map((tweet) => (<Tweet key={tweet.id} {...tweet}/>))}</Tweets>
