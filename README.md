@@ -1,4 +1,4 @@
-# Carrot Chat
+# NEW TWEET PROJECT
 
 ## 프로젝트 소개
 - 리액트와 파이어베이스를 사용하여 간단한 SNS (Tweet) 만들기
