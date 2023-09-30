@@ -22,7 +22,6 @@ export const UserInfo = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: 10px;
-
 `;
 
 
@@ -48,24 +47,22 @@ export const MoreBox = styled.div`
   cursor: pointer;
 `;
 
-export const Column = styled.div`
-  &:last-child {
-    place-self: end;
-  }
-;
-`;
-
 export const PhotoBox = styled.div`
   margin-top: 10px;
   display: flex;
   justify-content: center;
-  width: 100%px;
+  width: 100%;
+  &.write {
+    max-height: 450px;
+  }
+  
 `;
 
 export const Photo = styled.img`
-  width: 95%;
-  height: 95%;
-  border-radius: 15px;
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `;
 
 export const GridContainer = styled.div`
@@ -73,11 +70,6 @@ export const GridContainer = styled.div`
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
   gap: 2px;
-  img {
-    width: 100%;
-    height: 100%;
-  }
-
 `;
 
 export const UserName = styled.span`
@@ -90,3 +82,15 @@ export const Payload = styled.p`
   font-size: 13px;
   line-height: 25px;
 `;
+
+export const EditWrap = styled.div`
+  display: flex;
+  align-items: flex-end;
+`;
+
+export const DeleteButton = styled.button`
+  color: tomato;
+  border: tomato 1px solid;
+  border-radius: 2px;
+  margin-left: 2px;
+`

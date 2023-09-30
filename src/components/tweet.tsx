@@ -69,7 +69,7 @@ export default function Tweet({tweet, uid, id, images}: {
         {open && (<MoreMenu uid={uid} id={id} photoURL={images}/>)}
       </Box>
       <Payload>{tweet}</Payload>
-      <PhotoBox>
+      <PhotoBox className="write">
         {images ? (
           images.length === 1 ? (
             // 이미지가 한 장인 경우

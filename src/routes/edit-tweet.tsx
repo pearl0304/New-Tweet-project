@@ -13,6 +13,7 @@ import moment from "moment/moment";
 import {firebaseAuth, firebaseDB, firebaseStorage} from "../firebase.ts";
 import {getTweet} from "../common/common.ts";
 import {AttachFileButton, AttachFileInput, Form, SubmitBtn, TextArea} from "../styled/post.styled.ts";
+import {DeleteButton, EditWrap, GridContainer, Photo, PhotoBox} from "../styled/tweet.styled.ts";
 
 export default function EditTweet() {
   /** USER VERIFICATION**/
@@ -97,18 +98,18 @@ export default function EditTweet() {
 
   return <Form onSubmit={onSubmit}>
     <TextArea placeholder="What is happening" onChange={onChange} value={tweet} rows={5} maxLength={180} required/>
-    <div>
+    <PhotoBox>
       {images.length > 0 ? (
-        <div>
+        <GridContainer>
           {images.map((image, index) => (
-            <div key={index}>
-              <img src={image} alt={`Image ${index}`}/>
-              <button type="button" onClick={() => handleRemoveImage(index)}> X</button>
-            </div>
+            <EditWrap key={index}>
+              <Photo src={image} alt={`Image ${index}`}></Photo>
+              <DeleteButton type="button" onClick={() => handleRemoveImage(index)}> X</DeleteButton>
+            </EditWrap>
           ))}
-        </div>
+        </GridContainer>
       ) : null}
-    </div>
+    </PhotoBox>
     <AttachFileButton htmlFor="file">Add photo</AttachFileButton>
     <AttachFileInput type="file" id="file" accept="image/*" multiple onChange={handleFileUpload}/>
     <SubmitBtn type="submit" value={isLoading ? "Posting..." : "Edit Tweet"}/>
