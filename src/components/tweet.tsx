@@ -11,7 +11,7 @@ import {
 } from "../styled/tweet.styled.ts";
 import {useEffect, useRef, useState} from "react";
 import MoreMenu from "./more-menu.tsx";
-import {owner} from "../common/common.ts";
+import {getUser} from "../common/common.ts";
 import {Link} from "react-router-dom";
 
 export default function Tweet({tweet, uid, id, images}: {
@@ -20,6 +20,7 @@ export default function Tweet({tweet, uid, id, images}: {
   id: string,
   images: string[]
 }) {
+
   const [open, setOpen] = useState<boolean>(false);
   const [displayName, setDisplayName] = useState<string>("");
   const [profile, setProfile] = useState<string>("");
@@ -27,10 +28,19 @@ export default function Tweet({tweet, uid, id, images}: {
   const moreButtonRef = useRef<HTMLDivElement | null>(null);
 
 
-  owner(uid).then((data) => {
-    setDisplayName(data.displayName);
-    setProfile(data.photoURL)
-  })
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const userData = await getUser(uid);
+        setDisplayName(userData[0].displayName);
+        setProfile(userData[0].photoURL)
+      } catch (e) {
+        console.error("Error fetching user data: ", e)
+      }
+    }
+
+    fetchUserData();
+  }, [uid])
 
 
   const toggleMore = () => {

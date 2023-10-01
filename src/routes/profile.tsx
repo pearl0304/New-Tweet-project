@@ -17,7 +17,7 @@ import {collection, query, where, getDocs, limit, orderBy, updateDoc, doc, onSna
 import {ITweet} from "../interfaces.ts";
 import Tweet from "../components/tweet.tsx";
 import {Link, useLocation} from "react-router-dom";
-import {owner} from "../common/common.ts";
+import {getBookmarkList, getUser, owner} from "../common/common.ts";
 
 export default function Profile() {
   const user = firebaseAuth.currentUser;
@@ -26,6 +26,7 @@ export default function Profile() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const ownerUid = String(queryParams.get('uid'));
+  const mode = String(queryParams.get('mode'));
 
   const [avatar, setAvatar] = useState<string | null>('');
   const [displayName, setDisplayName] = useState<string>('');
@@ -35,11 +36,11 @@ export default function Profile() {
   useEffect(() => {
     async function fetchUserData() {
       try {
-        const userData = await owner(ownerUid);
-        setAvatar(userData.photoURL);
-        setDisplayName(userData.displayName);
-        setBio(userData.bio);
-        setLink(userData.link);
+        const userData = await getUser(ownerUid);
+        setAvatar(userData[0].photoURL);
+        setDisplayName(userData[0].displayName);
+        setBio(userData[0].bio);
+        setLink(userData[0].link);
       } catch (e) {
         console.error("Error fetching user data: ", e)
       }
@@ -78,17 +79,31 @@ export default function Profile() {
     }
   };
 
-
+  const getBookmark = async () => {
+    try {
+      const list = await getBookmarkList(ownerUid);
+      // 중첩 배열 해제
+      const flattenedList = list.flat();
+      setTweets(flattenedList);
+    } catch (e) {
+      console.warn(e);
+    }
+  };
 
   useEffect(() => {
+    if (mode === 'bookmark') {
+      getBookmark();
+    } else {
       getList();
+    }
+
     return () => {
       // Clean up the event listener when the component unmounts
       if (unsubscribe) {
         unsubscribe();
       }
     }
-  }, [ownerUid])
+  }, [ownerUid, mode])
 
 
   const onAvatarChange = async (e: React.ChangeEvent<HTMLFormElement>) => {
