@@ -4,7 +4,7 @@ import React, {useEffect, useState} from "react";
 import {firebaseAuth, firebaseDB, firebaseStorage} from "../firebase.ts";
 import {Input} from "../styled/auth.styled.ts";
 import {useLocation} from "react-router-dom";
-import {owner} from "../common/common.ts";
+import {getUser} from "../common/common.ts";
 import {doc, updateDoc} from "firebase/firestore";
 import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
 import {updateProfile} from "firebase/auth";
@@ -30,16 +30,25 @@ export default function EditProfile() {
 
 
   useEffect(() => {
-    owner(ownerUid).then((data) => {
-      setFormData({
-        displayName: data.displayName || "",
-        bio: data.bio || "",
-        link: data.link || "",
-        id: data.id
-      });
-      setAvatar(data.photoURL)
-    })
-  }, []);
+
+    async function fetchUserData() {
+      try {
+        const userData = await getUser(ownerUid);
+        setFormData({
+          displayName: userData[0].displayName || "",
+          bio: userData[0].bio || "",
+          link: userData[0].link || "",
+          id: userData[0].id
+        });
+        setAvatar(userData.photoURL)
+
+      } catch (e) {
+        console.error("Error retching user data", e)
+      }
+    }
+
+    fetchUserData();
+  }, [ownerUid]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
